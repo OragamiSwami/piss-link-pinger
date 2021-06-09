@@ -1,6 +1,6 @@
 #!/bin/bash
 
-links_conf=unrealircd.conf
+links_conf=frampad.conf
 form="html"
 
 OPTS=$(getopt -o f: --long "format:" -- "$@")
@@ -18,7 +18,16 @@ function my_echo {
     class=$1
     content=$2
     if [[ "$form" == "html" ]]; then
-        echo -n "<tr class=\"$class\">$content</tr>"
+        bound=""
+        tr="<td class=\"$class\">"
+        end="</td>"
+        case "$class" in
+            "link") bound="<tr>";;
+            "host") ;;
+            "ip4"|"ip6") ;;
+            "end") tr=""; end="</tr>\n";;
+        esac
+        echo -ne "$bound$tr$content$end"
     elif [[ "$form" == "orig" ]]; then
         mark=""
         mark2=""
@@ -27,9 +36,10 @@ function my_echo {
             "link") mark="=="; nl='\n';;
             "host") mark="++"; nl='\n';;
             "ip4"|"ip6") mark="--";mark2=" @ ";;
-            "ping") nl='\n';;
+            #"ping") nl='\n';;
+            "end") nl='\n';;
         esac
-        echo -ne "$mark$content$mark$mark2$nl"
+        echo -ne "$bound$mark$content$mark$mark2$bound$nl"
     else
         echo -n $content
     fi
@@ -71,7 +81,7 @@ function my_host {
         my_time $ip4 $port
     fi
     if [ ! -z "$ip6" ]; then
-        my_echo "ip6" ip6
+        my_echo "ip6" $ip6
         my_time $ip6 $port
     fi
 }
@@ -85,7 +95,7 @@ function my_link {
         my_echo "host" $hostname
         my_host $hostname $port
     fi
-    echo
+    my_echo "end" ""
 }
 
 function my_file {

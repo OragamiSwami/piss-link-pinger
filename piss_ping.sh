@@ -5,7 +5,7 @@ form="html"
 
 OPTS=$(getopt -o f: --long "format:" -- "$@")
 eval set -- "$OPTS"
-while true #[ "$1" != "" ]
+while true
   do
     case "$1" in
       -f|--format) form=$2; shift 2;;
@@ -50,7 +50,6 @@ function my_time {
         speed=`sudo traceroute$ver -n -w1 -m60 -T -p $sport $ip | tail -1 | grep -oP "[0-9]+?\.[0-9]+? ms" | head -1`
     fi
     if [[ "$speed" != *" ms" ]]; then speed="failed";fi
-    #echo -n "<tr class=\"ping\">$speed</tr>"
     my_echo "ping" "$speed"
 }
 
@@ -68,12 +67,10 @@ function my_host {
         ip6=`dig aaaa $hostname +short | grep -vP "(^::|[g-zG-Z])"|head -1`
     fi
     if [ ! -z "$ip4" ]; then
-        #echo -n "<tr class=\"ip4\">$ip4</tr>"
         my_echo "ip4" $ip4
         my_time $ip4 $port
     fi
     if [ ! -z "$ip6" ]; then
-        #echo -n "<tr class=\"ip6\">$ip6</tr>"
         my_echo "ip6" ip6
         my_time $ip6 $port
     fi
@@ -85,7 +82,6 @@ function my_link {
     sport=`echo "$block" | grep port | awk '{print $2}' | tr -d '\;'`
     hostname=`echo "$block" | grep hostname | awk '{print $2}' | tr -d '\;'`
     if [ ! -z "$hostname" ]; then
-        #echo -n "<tr class=\"host\">$hostname</tr>"
         my_echo "host" $hostname
         my_host $hostname $port
     fi

@@ -46,6 +46,18 @@ function my_echo {
 
 }
 
+function my_ports {
+    ip=$1
+    ports="6667 6668 6666 6669 6665 6670 6664"
+    for port in $ports; do
+        nc -Czw1 $ip $port &>/dev/null && my_echo "port" "$port open" && break
+    done
+    ports="6697 6698 6696 6699 6695 6700 6694"
+    for port in $ports; do
+        nc -Czw1 $ip $port &>/dev/null && my_echo "port" "$port open" && break
+    done
+}
+
 function my_time {
     ip=$1
     sport=$2
@@ -78,10 +90,12 @@ function my_host {
     fi
     if [ ! -z "$ip4" ]; then
         my_echo "ip4" $ip4
+        my_ports $ip4
         my_time $ip4 $port
     fi
     if [ ! -z "$ip6" ]; then
         my_echo "ip6" $ip6
+        my_ports $ip6
         my_time $ip6 $port
     fi
 }
@@ -102,4 +116,12 @@ function my_file {
     grep ^link $links_conf | awk '{print $2}' | while read link; do my_echo "link" $link; my_link $link; done
 }
 
+if [[ "$form" == "html" ]]; then
+   echo -ne "<html>\n<body>\n<table>\n"
+fi
+
 my_file
+
+if [[ "$form" == "html" ]]; then
+   echo -ne "</table>\n</body>\n</html>\n"
+fi

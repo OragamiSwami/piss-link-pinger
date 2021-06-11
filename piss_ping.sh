@@ -69,7 +69,7 @@ function my_time {
     fi
     if [[ "$speed" != *" ms" ]]; then
         if [[ $ip =~ ":" ]]; then ver=6;fi
-        speed=`sudo traceroute$ver -n -w1 -m60 -T -p $sport $ip | tail -1 | grep -oP "[0-9]+?\.[0-9]+? ms" | head -1`
+        speed="time=`sudo traceroute$ver -n -w1 -m60 -T -p $sport $ip | tail -1 | grep -oP "[0-9]+?\.[0-9]+? ms" | head -1`"
     fi
     if [[ "$speed" != *" ms" ]]; then speed="failed";fi
     my_echo "ping" "$speed"
@@ -117,7 +117,7 @@ function my_file {
 }
 
 if [[ "$form" == "html" ]]; then
-   echo -ne "<html>\n<body>\n<table>\n"
+   echo -ne "<html>\n<body><h1>`date`</h1>\n<table>\n"
 fi
 
 my_file

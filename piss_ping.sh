@@ -69,7 +69,7 @@ function my_time {
     fi
     if [[ "$speed" != *" ms" ]]; then
         if [[ $ip =~ ":" ]]; then ver=6;fi
-        speed="time=`sudo traceroute$ver -n -w1 -m60 -T -p $sport $ip | tail -1 | grep -oP "[0-9]+?\.[0-9]+? ms" | head -1`"
+        speed=`sudo traceroute$ver -n -w1 -m60 -T -p $sport $ip | tail -1 | grep -oP "[0-9]+?\.[0-9]+? ms" | head -1`
     fi
     if [[ "$speed" != *" ms" ]]; then speed="failed";fi
     my_echo "ping" "$speed"
@@ -83,10 +83,12 @@ function my_host {
     else
         ip4=`dig a $hostname +short | grep -vP "[a-zA-Z]"|head -1`
     fi
-    if [[ "$hostname" != "${1#*:[0-9a-fA-F]}" ]]; then
-        ip6=$hostname
-    else
-        ip6=`dig aaaa $hostname +short | grep -vP "(^::|[g-zG-Z])"|head -1`
+    if [[ ! "$ipv6_enable" ]]; then
+        if [[ "$hostname" != "${1#*:[0-9a-fA-F]}" ]]; then
+            ip6=$hostname
+        else
+            ip6=`dig aaaa $hostname +short | grep -vP "(^::|[g-zG-Z])"|head -1`
+        fi
     fi
     if [ ! -z "$ip4" ]; then
         my_echo "ip4" $ip4
@@ -117,7 +119,7 @@ function my_file {
 }
 
 if [[ "$form" == "html" ]]; then
-   echo -ne "<html>\n<body><h1>`date`</h1>\n<table>\n"
+   echo -ne "<html>\n<body>\n<table>\n"
 fi
 
 my_file
@@ -125,3 +127,4 @@ my_file
 if [[ "$form" == "html" ]]; then
    echo -ne "</table>\n</body>\n</html>\n"
 fi
+

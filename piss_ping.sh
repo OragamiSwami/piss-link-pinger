@@ -2,6 +2,7 @@
 
 links_conf=frampad.conf
 form="html"
+ipv6_enable=`ip addr | grep inet6 &>/dev/null; echo $?`
 
 OPTS=$(getopt -o f: --long "format:" -- "$@")
 eval set -- "$OPTS"

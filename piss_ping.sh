@@ -78,7 +78,7 @@ function my_time {
 
 function my_host {
     hostname=$1
-    port=$2
+    sport=$2
     if [[ "$hostname" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
         ip4=$hostname
     else
@@ -94,12 +94,12 @@ function my_host {
     if [ ! -z "$ip4" ]; then
         my_echo "ip4" $ip4
         my_ports $ip4
-        my_time $ip4 $port
+        my_time $ip4 $sport
     fi
     if [ ! -z "$ip6" ]; then
         my_echo "ip6" $ip6
         my_ports $ip6
-        my_time $ip6 $port
+        my_time $ip6 $sport
     fi
 }
 
@@ -110,7 +110,7 @@ function my_link {
     hostname=`echo "$block" | grep hostname | awk '{print $2}' | tr -d '\;'`
     if [ ! -z "$hostname" ]; then
         my_echo "host" $hostname
-        my_host $hostname $port
+        my_host $hostname $sport
     fi
     my_echo "end" ""
 }

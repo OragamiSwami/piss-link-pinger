@@ -120,7 +120,7 @@ function my_file {
 }
 
 if [[ "$form" == "html" ]]; then
-   echo -ne "<html>\n<body>\n<table>\n"
+    echo -ne "<html>\n<body><h1>`date`</h1>\n<table>\n"
 fi
 
 my_file
